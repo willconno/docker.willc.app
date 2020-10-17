@@ -31,19 +31,22 @@ services:
       - ./api:/var/www/api/
     ports:
       - "7001:3000"
-    command: nodemon start app.local.js
+    command: bash -c 'tsc && nodemon start build/app.local.js'
 
-#  docs:
-#    build:
-#      context: ./docs
-#    depends_on: 
-#      - db
-#    links:
-#      - db:mysql
-#    volumes:
-#      - ./docs:/var/www/docs/html
-#    ports:
-#      - "7002:80"
+  docs:
+    build:
+      context: ./docs
+    depends_on: 
+      - db
+    links:
+      - db:mysql
+    volumes:
+      - ./docs:/var/www/docs
+    ports:
+      - "7002:8080"
+    stdin_open: true
+    command: bash -c "pwd && /etc/init.d/nginx restart && npm start"
+
 
 volumes:
     db_data:
